@@ -34,7 +34,7 @@ Public Class frm_Main
         On Error Resume Next
         Dim tmppath As String, gsipath As String, syspath As String, outtmp As String, binpath As String
 
-        tmppath = Application.UserAppDataPath & "\Temp\"
+        tmppath = Application.StartupPath & "\Temp\"
         binpath = Application.StartupPath & "\bin\"
         syspath = tmppath & "sysimg-out\"
         gsipath = tmppath & "gsiimg-out\"
