@@ -64,6 +64,11 @@ Public Class frm_Main
             GoTo exitD
         End If
 
+        If chkGetFileContext.Checked And (Not CheckFileDir(txtFileContexts.Text)) Then
+            AppendTxtOut("W 警告: 找不到自定义file_contexts! 将自动生成!")
+            chkGetFileContext.Checked = False
+        End If
+
         If Not CheckFileDir(txtDSSIOut.Text) Then
             AppendTxtOut("W 警告: 未指定DSSI镜像文件的保存路径! 使用默认路径!")
             txtDSSIOut.Text = Application.StartupPath & "\DSSI.img"
@@ -174,6 +179,7 @@ exitD:
     End Sub
 
     Private Sub frm_Main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'It's security because only one thread will change controls
         CheckForIllegalCrossThreadCalls = False
     End Sub
 End Class
