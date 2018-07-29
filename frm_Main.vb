@@ -96,9 +96,9 @@ Public Class frm_Main
 
         AppendTxtOut("I 删除vendor软链接 ")
         If chkIsABDevice.Checked Then
-            System.IO.File.Delete(outtmp & "system\vendor")
+            IO.File.Delete(outtmp & "system\vendor")
         Else
-            System.IO.File.Delete(outtmp & "vendor")
+            IO.File.Delete(outtmp & "vendor")
         End If
 
         AppendTxtOut("I 复制vendor文件夹" & vbCrLf)
@@ -111,7 +111,7 @@ Public Class frm_Main
         If CheckFileDir(txtPropFiles.Text) Then
             AppendTxtOut("I 从proprietary-files.txt复制文件")
             ConvertDosUnix(txtPropFiles.Text, tmppath & "proprietary-files.txt")
-            Dim strArr() As String = System.IO.File.ReadAllLines(tmppath & "proprietary-files.txt")
+            Dim strArr() As String = IO.File.ReadAllLines(tmppath & "proprietary-files.txt")
             Dim tmpInt As Int32, tmpLine As String
             For tmpInt = 0 To strArr.Max
                 tmpLine = Trim(strArr(tmpInt))
@@ -121,7 +121,7 @@ Public Class frm_Main
                 If CheckFileDir(syspath & tmpLine) Then
                     CreatePath(outtmp & Mid(tmpLine, 1, InStrRev(tmpLine, "\")))
                     AppendTxtOut("  Copy: " & tmpLine)
-                    System.IO.File.Copy(syspath & tmpLine, outtmp & tmpLine)
+                    IO.File.Copy(syspath & tmpLine, outtmp & tmpLine)
                 End If
             Next
             AppendTxtOut("")
@@ -130,19 +130,19 @@ Public Class frm_Main
         If Not chkGetFileContext.Checked Then
             AppendTxtOut("I 生成file_contexts" & vbCrLf)
             If chkIsABDevice.Checked Then
-                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "system\etc\selinux\plat_file_contexts"))
-                System.IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
-                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "system\vendor\etc\selinux\nonplat_file_contexts"))
+                IO.File.AppendAllText(tmppath & "file_contexts", IO.File.ReadAllText(outtmp & "system\etc\selinux\plat_file_contexts"))
+                IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
+                IO.File.AppendAllText(tmppath & "file_contexts", IO.File.ReadAllText(outtmp & "system\vendor\etc\selinux\nonplat_file_contexts"))
                 SortFile(tmppath & "file_contexts")
                 UniqFile(tmppath & "file_contexts")
             Else
-                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "etc\selinux\plat_file_contexts"))
-                System.IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
-                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "vendor\etc\selinux\nonplat_file_contexts"))
+                IO.File.AppendAllText(tmppath & "file_contexts", IO.File.ReadAllText(outtmp & "etc\selinux\plat_file_contexts"))
+                IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
+                IO.File.AppendAllText(tmppath & "file_contexts", IO.File.ReadAllText(outtmp & "vendor\etc\selinux\nonplat_file_contexts"))
             End If
         Else
             AppendTxtOut("I 复制自定义file_context到临时文件夹" & vbCrLf)
-            System.IO.File.Copy(txtFileContexts.Text, tmppath & "file_contexts")
+            IO.File.Copy(txtFileContexts.Text, tmppath & "file_contexts")
         End If
 
         AppendTxtOut("I System分区大小: " & txtSysPartSize.Text & vbCrLf)
