@@ -69,7 +69,7 @@ Public Class frm_Main
             chkGetFileContext.Checked = False
         End If
 
-        If Not CheckFileDir(txtDSSIOut.Text) Then
+        If Trim(txtDSSIOut.Text).Length = 0 Then
             AppendTxtOut("W 警告: 未指定DSSI镜像文件的保存路径! 使用默认路径!")
             txtDSSIOut.Text = Application.StartupPath & "\DSSI.img"
             AppendTxtOut("I DSSI镜像文件的保存路径被设置为" & txtDSSIOut.Text & vbCrLf)
