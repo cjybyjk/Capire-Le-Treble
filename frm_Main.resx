@@ -117,4 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="txtOut.Text" xml:space="preserve">
+    <value>Capire-Le-Treble
+原作者: Erfan Abdi &lt;erfangplus@gmail.com&gt;
+A/B分区设备支持: Pranav Bedre &lt;bedrepranav@gmail.com&gt;
+Windows版作者: cjybyjk &lt;cjybyjk@gmail.com&gt;
+
+这个工具可以将GSI镜像转成DSSI镜像
+需要的文件: 原始System镜像 要转换的GSI镜像 (可选)proprietary-files.txt (可选)file_contexts
+
+</value>
+  </data>
 </root>

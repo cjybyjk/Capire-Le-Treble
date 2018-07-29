@@ -43,4 +43,23 @@
         CutStr = Mid(str, startp, Last - startp)
     End Function
 
+    Public Sub SortFile(ByVal strFile As String)
+        Dim tmpArr() As String
+        tmpArr = System.IO.File.ReadAllLines(strFile)
+        Array.Sort(tmpArr)
+        System.IO.File.WriteAllLines(strFile, tmpArr)
+        Erase tmpArr
+    End Sub
+
+    Public Sub UniqFile(ByVal strFile As String)
+        Dim tmpArr() As String
+        Dim Lst_Checked As New List(Of String)()
+        tmpArr = System.IO.File.ReadAllLines(strFile)
+        For Each eachString As String In tmpArr
+            If Not Lst_Checked.Contains(eachString) Then Lst_Checked.Add(eachString)
+        Next
+        Erase tmpArr
+        System.IO.File.WriteAllLines(strFile, Lst_Checked.ToArray)
+    End Sub
+
 End Module

@@ -21,7 +21,7 @@ Public Class frm_Main
             btnOpenFileContexts.Enabled = isUnlock
         End If
         chkGetFileContext.Enabled = isUnlock
-        'chkIsABDevice.Enabled = isUnlock
+        chkIsABDevice.Enabled = isUnlock
     End Sub
 
     Private Sub AppendTxtOut(ByVal text As String)
@@ -86,16 +86,27 @@ Public Class frm_Main
 
         AppendTxtOut("I 复制文件 ")
         If chkIsABDevice.Checked Then
-            'TODO: finish this for A/B device
+            My.Computer.FileSystem.CopyDirectory(syspath, outtmp)
+            My.Computer.FileSystem.DeleteDirectory(outtmp & "system", FileIO.DeleteDirectoryOption.DeleteAllContents)
+            My.Computer.FileSystem.CopyDirectory(gsipath, outtmp & "system")
         Else
             My.Computer.FileSystem.CopyDirectory(gsipath, outtmp)
         End If
 
+
         AppendTxtOut("I 删除vendor软链接 ")
-        System.IO.File.Delete(outtmp & "vendor")
+        If chkIsABDevice.Checked Then
+            System.IO.File.Delete(outtmp & "system\vendor")
+        Else
+            System.IO.File.Delete(outtmp & "vendor")
+        End If
 
         AppendTxtOut("I 复制vendor文件夹" & vbCrLf)
-        My.Computer.FileSystem.CopyDirectory(syspath & "vendor", outtmp & "vendor")
+        If chkIsABDevice.Checked Then
+            My.Computer.FileSystem.CopyDirectory(syspath & "system\vendor", outtmp & "system\vendor")
+        Else
+            My.Computer.FileSystem.CopyDirectory(syspath & "vendor", outtmp & "vendor")
+        End If
 
         If CheckFileDir(txtPropFiles.Text) Then
             AppendTxtOut("I 从proprietary-files.txt复制文件")
@@ -106,6 +117,7 @@ Public Class frm_Main
                 tmpLine = Trim(strArr(tmpInt))
                 If tmpLine.Length = 0 Or Strings.Left(tmpLine, 1) = "#" Or InStr(tmpLine, "vendor") > 0 Then Continue For
                 tmpLine = Replace(CutStr(tmpLine, ":", "|"), "/", "\")
+                If chkIsABDevice.Checked Then tmpLine = "system\" & tmpLine
                 If CheckFileDir(syspath & tmpLine) Then
                     CreatePath(outtmp & Mid(tmpLine, 1, InStrRev(tmpLine, "\")))
                     AppendTxtOut("  Copy: " & tmpLine)
@@ -114,11 +126,20 @@ Public Class frm_Main
             Next
             AppendTxtOut("")
         End If
+
         If Not chkGetFileContext.Checked Then
             AppendTxtOut("I 生成file_contexts" & vbCrLf)
-            System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "etc\selinux\plat_file_contexts"))
-            System.IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
-            System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "vendor\etc\selinux\nonplat_file_contexts"))
+            If chkIsABDevice.Checked Then
+                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "system\etc\selinux\plat_file_contexts"))
+                System.IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
+                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "system\vendor\etc\selinux\nonplat_file_contexts"))
+                SortFile(tmppath & "file_contexts")
+                UniqFile(tmppath & "file_contexts")
+            Else
+                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "etc\selinux\plat_file_contexts"))
+                System.IO.File.AppendAllText(tmppath & "file_contexts", vbLf)
+                System.IO.File.AppendAllText(tmppath & "file_contexts", System.IO.File.ReadAllText(outtmp & "vendor\etc\selinux\nonplat_file_contexts"))
+            End If
         Else
             AppendTxtOut("I 复制自定义file_context到临时文件夹" & vbCrLf)
             System.IO.File.Copy(txtFileContexts.Text, tmppath & "file_contexts")
@@ -127,7 +148,11 @@ Public Class frm_Main
         AppendTxtOut("I System分区大小: " & txtSysPartSize.Text & vbCrLf)
 
         AppendTxtOut("I 创建DSSI镜像")
-        RunCommand(binpath & "make_ext4fs.exe", "-T 0 -S " & yh & tmppath & "file_contexts" & yh & " -l " & txtSysPartSize.Text & " -s -L system -a system " & yh & txtDSSIOut.Text & yh & " " & yh & outtmp & yh, txtOut)
+        If chkIsABDevice.Checked Then
+            RunCommand(binpath & "make_ext4fs.exe", "-T 0 -S " & yh & tmppath & "file_contexts" & yh & " -l " & txtSysPartSize.Text & " -s -L / -a / " & yh & txtDSSIOut.Text & yh & " " & yh & outtmp & yh, txtOut)
+        Else
+            RunCommand(binpath & "make_ext4fs.exe", "-T 0 -S " & yh & tmppath & "file_contexts" & yh & " -l " & txtSysPartSize.Text & " -s -L system -a system " & yh & txtDSSIOut.Text & yh & " " & yh & outtmp & yh, txtOut)
+        End If
 
         AppendTxtOut("I 删除临时文件" & vbCrLf)
         My.Computer.FileSystem.DeleteDirectory(tmppath, FileIO.DeleteDirectoryOption.DeleteAllContents)

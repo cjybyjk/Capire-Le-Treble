@@ -22,6 +22,7 @@ Partial Class frm_Main
     '不要使用代码编辑器修改它。
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frm_Main))
         Me.lblTip1 = New System.Windows.Forms.Label()
         Me.lblTip2 = New System.Windows.Forms.Label()
         Me.lblTip3 = New System.Windows.Forms.Label()
@@ -155,9 +156,7 @@ Partial Class frm_Main
         Me.txtOut.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtOut.Size = New System.Drawing.Size(628, 262)
         Me.txtOut.TabIndex = 11
-        Me.txtOut.Text = "Capire-Le-Treble" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "原作者: Erfan Abdi <erfangplus@gmail.com>" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Windows版作者: cjybyjk <cj" &
-    "ybyjk@gmail.com>" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "这个工具可以将GSI镜像转成DSSI镜像" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "需要的文件: 原始System镜像 要转换的GSI镜像 (可选)propri" &
-    "etary-files.txt (可选)file_contexts" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
+        Me.txtOut.Text = resources.GetString("txtOut.Text")
         '
         'btnStart
         '
@@ -208,7 +207,6 @@ Partial Class frm_Main
         'chkIsABDevice
         '
         Me.chkIsABDevice.AutoSize = True
-        Me.chkIsABDevice.Enabled = False
         Me.chkIsABDevice.Location = New System.Drawing.Point(14, 85)
         Me.chkIsABDevice.Name = "chkIsABDevice"
         Me.chkIsABDevice.Size = New System.Drawing.Size(114, 16)
