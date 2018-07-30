@@ -121,6 +121,7 @@ Public Class frm_Main
                     flagNoRelpace = True
                     tmpLine = Mid(2, tmpLine.Length - 1)
                 End If
+                If Strings.Left(tmpLine, 1) = "-" Then tmpLine = Mid(2, tmpLine.Length - 1)
                 tmpLine = Replace(CutStr(tmpLine, ":", "|"), "/", "\")
                 If chkIsABDevice.Checked Then tmpLine = "system\" & tmpLine
                 If CheckFileDir(syspath & tmpLine) Then
