@@ -109,18 +109,24 @@ Public Class frm_Main
         End If
 
         If CheckFileDir(txtPropFiles.Text) Then
+            Dim flagNoRelpace As Boolean = False
             AppendTxtOut("I 从proprietary-files.txt复制文件")
             ConvertDosUnix(txtPropFiles.Text, tmppath & "proprietary-files.txt")
             Dim strArr() As String = IO.File.ReadAllLines(tmppath & "proprietary-files.txt")
             Dim tmpInt As Int32, tmpLine As String
-            For tmpInt = 0 To strArr.Max
+            For tmpInt = 0 To UBound(strArr)
                 tmpLine = Trim(strArr(tmpInt))
                 If tmpLine.Length = 0 Or Strings.Left(tmpLine, 1) = "#" Or InStr(tmpLine, "vendor") > 0 Then Continue For
+                If Strings.Left(tmpLine, 1) = "?" Then
+                    flagNoRelpace = True
+                    tmpLine = Mid(2, tmpLine.Length - 1)
+                End If
                 tmpLine = Replace(CutStr(tmpLine, ":", "|"), "/", "\")
                 If chkIsABDevice.Checked Then tmpLine = "system\" & tmpLine
                 If CheckFileDir(syspath & tmpLine) Then
                     CreatePath(outtmp & Mid(tmpLine, 1, InStrRev(tmpLine, "\")))
                     AppendTxtOut("  Copy: " & tmpLine)
+                    If Not flagNoRelpace Then IO.File.Delete(outtmp & tmpLine)
                     IO.File.Copy(syspath & tmpLine, outtmp & tmpLine)
                 End If
             Next
