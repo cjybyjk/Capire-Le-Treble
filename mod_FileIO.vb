@@ -1,7 +1,11 @@
 ﻿Module mod_FileIO
 
-    Public Function CheckFileDir(ByVal strPath As String) As Boolean
-        CheckFileDir = (IO.Directory.Exists(strPath) Or IO.File.Exists(strPath)) And strPath.Length > 0
+    Public Function CheckFile(ByVal strPath As String) As Boolean
+        CheckFile = IO.File.Exists(strPath) And strPath.Length > 0
+    End Function
+
+    Public Function CheckDir(ByVal strPath As String) As Boolean
+        CheckDir = IO.Directory.Exists(strPath) And strPath.Length > 0
     End Function
 
     Public Sub FileDialog(ByVal strFilter As String, ByVal strTitle As String, ByRef txtbox As TextBox, Optional ByVal isOpen As Boolean = True)

@@ -41,7 +41,7 @@ Public Class frm_Main
         outtmp = tmppath & "system\"
 
         AppendTxtOut("I 临时文件目录: " & tmppath)
-        If CheckFileDir(tmppath) Then
+        If CheckDir(tmppath) Then
             AppendTxtOut("I 清理临时文件" & vbCrLf)
             My.Computer.FileSystem.DeleteDirectory(tmppath, FileIO.DeleteDirectoryOption.DeleteAllContents)
         End If
@@ -49,7 +49,7 @@ Public Class frm_Main
 
         AppendTxtOut("")
 
-        If Not CheckFileDir(txtSysImg.Text) Then
+        If Not CheckFile(txtSysImg.Text) Then
             AppendTxtOut("E 错误: 未找到System镜像文件!")
             GoTo exitD
         End If
@@ -59,12 +59,12 @@ Public Class frm_Main
             GoTo exitD
         End If
 
-        If Not CheckFileDir(txtGSI.Text) Then
+        If Not CheckFile(txtGSI.Text) Then
             AppendTxtOut("E 错误: 未找到GSI镜像文件!")
             GoTo exitD
         End If
 
-        If chkGetFileContext.Checked And (Not CheckFileDir(txtFileContexts.Text)) Then
+        If chkGetFileContext.Checked And (Not CheckFile(txtFileContexts.Text)) Then
             AppendTxtOut("W 警告: 找不到自定义file_contexts! 将自动生成!")
             chkGetFileContext.Checked = False
         End If
@@ -108,7 +108,7 @@ Public Class frm_Main
             My.Computer.FileSystem.CopyDirectory(syspath & "vendor", outtmp & "vendor")
         End If
 
-        If CheckFileDir(txtPropFiles.Text) Then
+        If CheckFile(txtPropFiles.Text) Then
             Dim flagNoRelpace As Boolean = False
             AppendTxtOut("I 从proprietary-files.txt复制文件")
             ConvertDosUnix(txtPropFiles.Text, tmppath & "proprietary-files.txt")
@@ -124,7 +124,7 @@ Public Class frm_Main
                 If Strings.Left(tmpLine, 1) = "-" Then tmpLine = Mid(2, tmpLine.Length - 1)
                 tmpLine = Replace(CutStr(tmpLine, ":", "|"), "/", "\")
                 If chkIsABDevice.Checked Then tmpLine = "system\" & tmpLine
-                If CheckFileDir(syspath & tmpLine) Then
+                If CheckFile(syspath & tmpLine) Then
                     CreatePath(outtmp & Mid(tmpLine, 1, InStrRev(tmpLine, "\")))
                     AppendTxtOut("  Copy: " & tmpLine)
                     If Not flagNoRelpace Then IO.File.Delete(outtmp & tmpLine)
