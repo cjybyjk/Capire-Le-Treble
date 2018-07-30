@@ -119,9 +119,11 @@ Public Class frm_Main
                 If tmpLine.Length = 0 Or Strings.Left(tmpLine, 1) = "#" Or InStr(tmpLine, "vendor") > 0 Then Continue For
                 If Strings.Left(tmpLine, 1) = "?" Then
                     flagNoRelpace = True
-                    tmpLine = Mid(2, tmpLine.Length - 1)
+                    tmpLine = Strings.Right(tmpLine, tmpLine.Length - 1)
                 End If
-                If Strings.Left(tmpLine, 1) = "-" Then tmpLine = Mid(2, tmpLine.Length - 1)
+                If Strings.Left(tmpLine, 1) = "-" Then
+                    tmpLine = Strings.Right(tmpLine, tmpLine.Length - 1)
+                End If
                 tmpLine = Replace(CutStr(tmpLine, ":", "|"), "/", "\")
                 If chkIsABDevice.Checked Then tmpLine = "system\" & tmpLine
                 If CheckFile(syspath & tmpLine) Then
